@@ -28,8 +28,8 @@ public class ListLutemonActivity extends AppCompatActivity {
 
         LutemonListRV = findViewById(R.id.LutemonListRV);
         LutemonListRV.setLayoutManager(new LinearLayoutManager(this));
-        ArrayList<Lutemon> aliveLutemons = new ArrayList<>(getAliveLutemons(Storage.getInstance().getAllLutemons()));
-        adapter = new LutemonListAdapter(getApplicationContext(), aliveLutemons);
+        ArrayList<Lutemon> allLutemons = new ArrayList<>(Storage.getInstance().getAllLutemons());
+        adapter = new LutemonListAdapter(getApplicationContext(), allLutemons);
         LutemonListRV.setAdapter(adapter);
 
         Storage storage = Storage.getInstance();
@@ -47,13 +47,10 @@ public class ListLutemonActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        ArrayList<Lutemon> aliveLutemons = new ArrayList<>(getAliveLutemons(Storage.getInstance().getAllLutemons()));
+        ArrayList<Lutemon> allLutemons = new ArrayList<>(Storage.getInstance().getAllLutemons());
         if (LutemonListRV.getAdapter() instanceof LutemonListAdapter) {
-            ((LutemonListAdapter) LutemonListRV.getAdapter()).updateData(aliveLutemons);
+            ((LutemonListAdapter) LutemonListRV.getAdapter()).updateData(allLutemons);
         }
     }
 
-    private List<Lutemon> getAliveLutemons(List<Lutemon> lutemons) {
-        return lutemons.stream().filter(lutemon -> lutemon.getLife() > 0).collect(Collectors.toList());
-    }
 }

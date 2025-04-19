@@ -1,6 +1,8 @@
 package com.example.harkkatyo;
 
-public class Lutemon {
+import java.io.Serializable;
+
+public class Lutemon implements Serializable {
     protected static int idCounter = 1;
     protected int id;
     protected String name;
@@ -12,6 +14,10 @@ public class Lutemon {
     protected int experience;
     protected String location;
     private boolean isSelected;
+    private int fights;
+    private int wins;
+    private int losses;
+    private int trainingDays;
 
     public Lutemon(String name, int maxLife) {
         this.id = idCounter++;
@@ -20,6 +26,38 @@ public class Lutemon {
         this.life = maxLife;
         this.experience = 0;
         this.location = "Kotona";
+    }
+
+    public int getFights() {
+        return fights;
+    }
+
+    public int getWins() {
+        return wins;
+    }
+
+    public void setFights(int fights) {
+        this.fights = fights;
+    }
+
+    public void setWins(int wins) {
+        this.wins = wins;
+    }
+
+    public void setLosses(int losses) {
+        this.losses = losses;
+    }
+
+    public void setTrainingDays(int trainingDays) {
+        this.trainingDays = trainingDays;
+    }
+
+    public int getLosses() {
+        return losses;
+    }
+
+    public int getTrainingDays() {
+        return trainingDays;
     }
 
     public boolean isSelected() {
@@ -79,7 +117,9 @@ public class Lutemon {
     }
 
     public boolean defend(int attackPower) {
-        int damage = Math.max(0, attackPower - defense);
+        int randomBonus = (int)(Math.random() * 3);
+        int modifiedAttack = attackPower + randomBonus;
+        int damage = Math.max(0, modifiedAttack - defense);
         life -= damage;
         if (life < 0) {
             life = 0;

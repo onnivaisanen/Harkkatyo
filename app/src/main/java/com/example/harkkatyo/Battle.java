@@ -9,16 +9,20 @@ public class Battle {
             battleLog.append(a.getName()).append(" hyökkää ").append(b.getName()).append(" kimppuun!\n");
             boolean alive = b.defend(a.getAttack());
             if (!alive) {
-                battleLog.append(b.getName()).append(" kuoli.\n");
+                battleLog.append(b.getName()).append(" hävisi.\n");
                 battleLog.append("Taistelu päättyi.\n");
                 a.train();
+                a.setWins(a.getWins() + 1);
+                a.setFights(a.getFights() + 1);
                 a.resetLife();
+                b.resetLife();
+                b.setFights(b.getFights() + 1);
+                b.setLosses(b.getLosses() + 1);
                 Storage.getInstance().moveLutemonToLocation(a, "Kotiin");
-                Storage.getInstance().moveLutemonToLocation(b, "Kuollut");
-                Storage.getInstance().removeLutemon(b);
+                Storage.getInstance().moveLutemonToLocation(b, "Kotiin");
                 break;
             } else {
-                battleLog.append(b.getName()).append(" onnistui välttämään kuoleman.\n");
+                battleLog.append(b.getName()).append(" onnistui välttämään tappion.\n");
             }
 
             Lutemon temp = a;

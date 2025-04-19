@@ -96,6 +96,7 @@ public class TrainingAreaFragment extends Fragment {
             // Siirretään lutemonit valittuun sijaintiin
             for (Lutemon lutemon : selectedLutemons) {
                 lutemon.train();
+                lutemon.setTrainingDays(lutemon.getTrainingDays() + 1);
             }
 
             Toast.makeText(getContext(), "Lutemonit treenasivat", Toast.LENGTH_SHORT).show();

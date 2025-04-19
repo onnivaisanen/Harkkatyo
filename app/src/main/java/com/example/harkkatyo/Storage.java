@@ -1,7 +1,14 @@
 package com.example.harkkatyo;
 
+import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -10,7 +17,6 @@ public class Storage {
     private ArrayList<Lutemon> homeLutemons;
     private ArrayList<Lutemon> trainingLutemons;
     private ArrayList<Lutemon> fightLutemons;
-    private ArrayList<Lutemon> deadLutemons;
     private static Storage storage = null;
 
     private Storage() {
@@ -18,7 +24,6 @@ public class Storage {
         homeLutemons = new ArrayList<>();
         trainingLutemons = new ArrayList<>();
         fightLutemons = new ArrayList<>();
-        deadLutemons = new ArrayList<>();
 
     }
     public static Storage getInstance() {
@@ -62,8 +67,58 @@ public class Storage {
         return fightLutemons;
     }
 
-    public ArrayList<Lutemon> getDeadLutemons() {
-        return deadLutemons;
+    public void saveLutemons(Context context) {
+        try {
+            ObjectOutputStream lutemonWriter = new ObjectOutputStream(context.openFileOutput("lutemons.data", Context.MODE_PRIVATE));
+            lutemonWriter.writeObject(lutemons);
+            lutemonWriter.close();
+            Toast.makeText(context, "Lutemonit tallennettiin onnistuneesti tiedostoon lutemons.data", Toast.LENGTH_SHORT).show();
+            Log.d("Storage", "Tallennettiin " + lutemons.size() + " lutemonia.");
+        } catch (IOException e) {
+            Toast.makeText(context, "Tallennus epäonnistui", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void loadLutemons(Context context) {
+        try {
+            ObjectInputStream lutemonReader = new ObjectInputStream(context.openFileInput("lutemons.data"));
+            lutemons = (HashMap<Integer, Lutemon>) lutemonReader.readObject();
+            lutemonReader.close();
+            Toast.makeText(context, "Lutemonit ladattiin onnistuneesti tiedostosta lutemons.data", Toast.LENGTH_SHORT).show();
+
+
+            homeLutemons.clear();
+            trainingLutemons.clear();
+            fightLutemons.clear();
+
+            for (Lutemon lutemon : lutemons.values()) {
+                switch (lutemon.getLocation()) {
+                    case "Kotiin":
+                    case "Kotona":
+                        homeLutemons.add(lutemon);
+                        break;
+                    case "Treenaamaan":
+                        trainingLutemons.add(lutemon);
+                        break;
+                    case "Taisteluareenalle":
+                        fightLutemons.add(lutemon);
+                        break;
+                    default:
+                        homeLutemons.add(lutemon);
+                        break;
+                }
+            }
+            Log.d("Storage", "Ladattiin " + lutemons.size() + " lutemonia.");
+        } catch (FileNotFoundException e) {
+            Toast.makeText(context, "Tiedostoa ei löytynyt", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        } catch (IOException e) {
+            Toast.makeText(context, "Lataus epäonnistui", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            Toast.makeText(context, "Lataus epäonnistui", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
     }
 
     public void moveLutemonToLocation(Lutemon lutemon, String location) {
@@ -71,7 +126,6 @@ public class Storage {
         homeLutemons.remove(lutemon);
         trainingLutemons.remove(lutemon);
         fightLutemons.remove(lutemon);
-        deadLutemons.remove(lutemon);
 
         switch (location) {
             case "Kotiin":
@@ -82,9 +136,6 @@ public class Storage {
                 break;
             case "Taisteluareenalle":
                 fightLutemons.add(lutemon);
-                break;
-            case "Kuollut":
-                deadLutemons.add(lutemon);
                 break;
             default:
                 Log.d("Storage", "Tuntematon sijainti: " + location);

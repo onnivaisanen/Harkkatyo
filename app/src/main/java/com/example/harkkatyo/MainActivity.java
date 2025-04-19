@@ -1,5 +1,6 @@
 package com.example.harkkatyo;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -11,6 +12,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 public class MainActivity extends AppCompatActivity {
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +24,8 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        context = MainActivity.this;
     }
 
     public void switchToAddLutemonActivity(View view) {
@@ -42,5 +46,13 @@ public class MainActivity extends AppCompatActivity {
     public void switchToBattleActivity(View view) {
         Intent intent = new Intent(this, BattleActivity.class);
         startActivity(intent);
+    }
+
+    public void saveLutemons(View view) {
+        Storage.getInstance().saveLutemons(context);
+    }
+
+    public void loadLutemons(View view) {
+        Storage.getInstance().loadLutemons(context);
     }
 }
