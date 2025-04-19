@@ -31,8 +31,8 @@ public class SelectableLutemonAdapter extends RecyclerView.Adapter<SelectableLut
     @Override
     public void onBindViewHolder(@NonNull SelectableLutemonViewHolder holder, int position) {
         Lutemon l = lutemons.get(position);
-        Log.d("SelectableLutemonAdapter", "Binding Lutemon: " + l.getName());
         holder.nameText.setText(l.getName() + " (" + l.getColor() + ")");
+        holder.checkBox.setOnCheckedChangeListener(null);
         holder.checkBox.setChecked(l.isSelected());
         holder.checkBox.setOnCheckedChangeListener(((buttonView, isChecked) -> {
             l.setSelected(isChecked);
@@ -40,13 +40,11 @@ public class SelectableLutemonAdapter extends RecyclerView.Adapter<SelectableLut
     }
 
     public int getItemCount() {
-        Log.d("SelectableLutemonAdapter", "Item count: " + lutemons.size());
         return lutemons.size();
     }
 
     public void updateData(ArrayList<Lutemon> newData) {
         this.lutemons = newData;
-        Log.d("SelectableLutemonAdapter", "Data updated with size: " + newData.size());
         notifyDataSetChanged();
     }
 

@@ -73,7 +73,6 @@ public class Storage {
             lutemonWriter.writeObject(lutemons);
             lutemonWriter.close();
             Toast.makeText(context, "Lutemonit tallennettiin onnistuneesti tiedostoon lutemons.data", Toast.LENGTH_SHORT).show();
-            Log.d("Storage", "Tallennettiin " + lutemons.size() + " lutemonia.");
         } catch (IOException e) {
             Toast.makeText(context, "Tallennus epäonnistui", Toast.LENGTH_SHORT).show();
         }

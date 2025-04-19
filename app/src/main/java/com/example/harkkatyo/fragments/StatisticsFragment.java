@@ -58,21 +58,29 @@ public class StatisticsFragment extends Fragment {
         recyclerView.setAdapter(adapter);
         HashMap<String, Integer> winsByColor = new HashMap<>();
         HashMap<String, Integer> lossesByColor = new HashMap<>();
+        HashMap<String, Integer> trainingDaysByColor = new HashMap<>();
+        HashMap<String, Integer> fightsByColor = new HashMap<>();
 
         for (Lutemon lutemon : Storage.getInstance().getAllLutemons()) {
             String color = lutemon.getColor();
             winsByColor.put(color, winsByColor.getOrDefault(color, 0) + lutemon.getWins());
             lossesByColor.put(color, lossesByColor.getOrDefault(color, 0) + lutemon.getLosses());
+            trainingDaysByColor.put(color, trainingDaysByColor.getOrDefault(color, 0) + lutemon.getTrainingDays());
+            fightsByColor.put(color, fightsByColor.getOrDefault(color, 0) + lutemon.getFights());
         }
 
         ArrayList<BarEntry> winEntries = new ArrayList<>();
         ArrayList<BarEntry> lossEntries = new ArrayList<>();
+        ArrayList<BarEntry> trainingDayEntries = new ArrayList<>();
+        ArrayList<BarEntry> fightEntries = new ArrayList<>();
         ArrayList<String> colors = new ArrayList<>();
 
         int index = 0;
         for (String color : winsByColor.keySet()) {
             winEntries.add(new BarEntry(index, winsByColor.getOrDefault(color, 0)));
             lossEntries.add(new BarEntry(index, lossesByColor.getOrDefault(color, 0)));
+            trainingDayEntries.add(new BarEntry(index, trainingDaysByColor.getOrDefault(color,0)));
+            fightEntries.add(new BarEntry(index, fightsByColor.getOrDefault(color,0)));
             colors.add(color);
             index++;
         }
@@ -85,8 +93,16 @@ public class StatisticsFragment extends Fragment {
         lossDataSet.setColor(Color.RED);
         lossDataSet.setValueTypeface(Typeface.MONOSPACE);
 
-        BarData data = new BarData(winDataSet, lossDataSet);
-        data.setBarWidth(0.35f);
+        BarDataSet trainingDaysDataSet = new BarDataSet(trainingDayEntries, "Treenipäivät");
+        trainingDaysDataSet.setColor(Color.YELLOW);
+        trainingDaysDataSet.setValueTypeface(Typeface.MONOSPACE);
+
+        BarDataSet fightsDataSet = new BarDataSet(fightEntries, "Taistelut");
+        fightsDataSet.setColor(Color.BLUE);
+        fightsDataSet.setValueTypeface(Typeface.MONOSPACE);
+
+        BarData data = new BarData(fightsDataSet, winDataSet, lossDataSet, trainingDaysDataSet);
+        data.setBarWidth(0.15f);
         barChart.setData(data);
 
         XAxis xAxis = barChart.getXAxis();
