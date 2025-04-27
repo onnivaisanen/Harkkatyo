@@ -140,7 +140,7 @@ public class Lutemon implements Serializable {
             case "Pinkki":
                 return R.drawable.lutemon_pink;
             default:
-                return R.drawable.default_lutemon; // jos haluat varakuvan
+                return R.drawable.default_lutemon;
         }
     }
 }

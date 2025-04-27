@@ -123,7 +123,6 @@ public class Storage {
     }
 
     public void moveLutemonToLocation(Lutemon lutemon, String location) {
-        Log.d("Storage", "Siirretään Lutemon " + lutemon.getName() + " sijaintiin: " + location);  // Lisätty logi
         homeLutemons.remove(lutemon);
         trainingLutemons.remove(lutemon);
         fightLutemons.remove(lutemon);

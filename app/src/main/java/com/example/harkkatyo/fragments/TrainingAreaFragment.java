@@ -37,22 +37,18 @@ public class TrainingAreaFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_training_area, container, false);
 
-        // Haetaan trainingLutemons lista Storage-luokasta
         trainingLutemons = Storage.getInstance().getTrainingLutemons();
         Log.d("TrainingAreaFragment", "Lutemonit trainingArealla: " + trainingLutemons.size());  // Lisätty logi
 
-        // Määritetään RecyclerView ja sen adapteri
         RecyclerView trainingRV = rootView.findViewById(R.id.trainingRV);
         trainingRV.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new SelectableLutemonAdapter(getContext(), trainingLutemons);
         trainingRV.setAdapter(adapter);
 
-        // RadioGroup ja Button, joiden avulla siirretään lutemonit
         RadioGroup transferLocationRadioGroup = rootView.findViewById(R.id.transferLocationRadioGroup);
         Button transferButton = rootView.findViewById(R.id.transferButton);
 
         transferButton.setOnClickListener(v -> {
-            // Haetaan valittu sijainti
             int selectedId = transferLocationRadioGroup.getCheckedRadioButtonId();
 
             if (selectedId == -1) {
@@ -63,7 +59,6 @@ public class TrainingAreaFragment extends Fragment {
             RadioButton selectedRadioButton = rootView.findViewById(selectedId);
             String selectedLocation = selectedRadioButton.getText().toString();
 
-            // Haetaan valitut lutemonit
             ArrayList<Lutemon> selectedLutemons = adapter.getSelectedLutemons();
 
             if (selectedLutemons.isEmpty()) {
@@ -71,21 +66,18 @@ public class TrainingAreaFragment extends Fragment {
                 return;
             }
 
-            // Siirretään lutemonit valittuun sijaintiin
             for (Lutemon lutemon : selectedLutemons) {
                 Storage.getInstance().moveLutemonToLocation(lutemon, selectedLocation);
             }
 
             Toast.makeText(getContext(), "Lutemonit siirrettiin " + selectedLocation, Toast.LENGTH_SHORT).show();
 
-            // Päivitetään lista
             adapter.updateData(Storage.getInstance().getTrainingLutemons());
         });
 
         Button trainButton = rootView.findViewById(R.id.trainButton);
         trainButton.setOnClickListener(v -> {
 
-            // Haetaan valitut lutemonit
             ArrayList<Lutemon> selectedLutemons = adapter.getSelectedLutemons();
 
             if (selectedLutemons.isEmpty()) {
@@ -93,7 +85,6 @@ public class TrainingAreaFragment extends Fragment {
                 return;
             }
 
-            // Siirretään lutemonit valittuun sijaintiin
             for (Lutemon lutemon : selectedLutemons) {
                 lutemon.train();
                 lutemon.setTrainingDays(lutemon.getTrainingDays() + 1);
@@ -102,8 +93,6 @@ public class TrainingAreaFragment extends Fragment {
             Toast.makeText(getContext(), "Lutemonit treenasivat", Toast.LENGTH_SHORT).show();
             adapter.clearSelections();
 
-
-            // Päivitetään lista
             adapter.updateData(Storage.getInstance().getTrainingLutemons());
         });
 
