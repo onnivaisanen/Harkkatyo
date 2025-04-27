@@ -71,6 +71,7 @@ public class Storage {
         try {
             ObjectOutputStream lutemonWriter = new ObjectOutputStream(context.openFileOutput("lutemons.data", Context.MODE_PRIVATE));
             lutemonWriter.writeObject(lutemons);
+            lutemonWriter.writeInt(Lutemon.idCounter);
             lutemonWriter.close();
             Toast.makeText(context, "Lutemonit tallennettiin onnistuneesti tiedostoon lutemons.data", Toast.LENGTH_SHORT).show();
         } catch (IOException e) {
@@ -82,6 +83,7 @@ public class Storage {
         try {
             ObjectInputStream lutemonReader = new ObjectInputStream(context.openFileInput("lutemons.data"));
             lutemons = (HashMap<Integer, Lutemon>) lutemonReader.readObject();
+            Lutemon.idCounter = lutemonReader.readInt();
             lutemonReader.close();
             Toast.makeText(context, "Lutemonit ladattiin onnistuneesti tiedostosta lutemons.data", Toast.LENGTH_SHORT).show();
 
